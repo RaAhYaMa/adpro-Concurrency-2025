@@ -1,37 +1,15 @@
-# Commit 1 Reflection Notes
+**Commit 2 Reflection Notes**
 
-## Understanding the `handle_connection` Method
+As I worked on implementing the `handle_connection` function, I gained a deeper understanding of how to handle incoming TCP connections and serve HTML content. One key takeaway was the importance of specifying the `Content-Length` header in the HTTP response. This header informs the client of the size of the response body, which is crucial for proper rendering of the HTML content.
 
-As I reviewed the code in `src/main.rs`, I noticed that the `handle_connection` method is responsible for handling incoming TCP connections. To better understand what's happening inside this method, I've broken it down into smaller parts.
+I also learned about the `BufReader` type and how it can be used to improve performance when reading from a stream. By buffering the data, we can reduce the number of reads from the underlying stream, making the program more efficient.
 
-### Step 1: Creating a `BufReader` instance
+Another important aspect was understanding how to read and write files using the `fs` module. In this case, we read the contents of the `hello.html` file and serve it as the response body.
 
-The method starts by creating a `BufReader` instance from the incoming TCP stream:
-```rust
-let buf_reader = BufReader::new(&mut stream);
-```
-According to the Rust documentation, `BufReader` is a type of reader that buffers data from an underlying reader. In this case, the underlying reader is the TCP stream. By using a `BufReader`, we can improve performance by reducing the number of reads from the underlying stream.
+To test the program, I made sure to run `cargo run` from the same directory as the `hello.html` file. I also captured a screenshot of the browser rendering the HTML content and added it to the `README.md` file.
 
-### Step 2: Reading lines from the stream
+Here's a screenshot of the browser rendering the HTML content:
 
-The `buf_reader` is then used to read lines from the stream:
-```rust
-let http_request: Vec<_> = buf_reader
-    .lines()
-    .map(|result| result.unwrap())
-    .take_while(|line| !line.is_empty())
-    .collect();
-```
-Here, we're using the `lines` method to read lines from the stream. The `map` method is used to unwrap the `Result` values returned by `lines`, and `take_while` is used to stop reading lines when an empty line is encountered. Finally, the `collect` method is used to collect the lines into a vector.
+![Commit 2 screen capture](public/static/image/Screenshot%202025-03-19%20104238.png)
 
-### Step 3: Printing the HTTP request
-
-The final step is to print the HTTP request:
-```rust
-println!("Request: {:#?}", http_request);
-```
-This simply prints the collected lines to the console, prefixed with "Request: ".
-
-### Reflection Notes
-
-As I reviewed this code, I realized that I need to check the Rust documentation to understand the specifics of the `handle_connection` method. I've learned about the `BufReader` type and how it's used to improve performance when reading from a stream. I've also seen how the `lines` method is used to read lines from a stream, and how `map`, `take_while`, and `collect` are used to process the lines.
+Overall, this exercise helped me understand the basics of handling HTTP connections and serving HTML content in Rust. I'm excited to continue exploring and learning more about web development in Rust.
